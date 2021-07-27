@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Rio Horoscopes</title>
+    <script src="./src/index.js" defer></script>
+</head>
+<body>
+    <form id="search-form">
+        <input type="text" id="day-input" placeholder="dd">
+        <input type="text" id="month-input" placeholder="mm">
+        <input type="text" id="location" placeholder="Current Location">
+        <select name="day" id="dayDropdown">
+            <option value="selectTab">Select Horoscope day</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="tomorrow">Tomorrow</option>
+        </select>
+        <button id="inputSubmitBtn">Go</button>
+    </form>
+    <div class="displayResultDiv">
+
+    </div>
+</body>
+</html>
