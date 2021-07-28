@@ -1,5 +1,6 @@
 const baseAztroURL = "https://sameer-kumar-aztro-v1.p.rapidapi.com";
-const baseDevbrewerURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short";
+const baseDevbrewerShortURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short";
+const baseDevbrewerLongURL = "https://devbrewer-horoscope.p.rapidapi.com/today/long";
 const searchForm = document.querySelector("#search-form");
 const displayResultDiv = document.querySelector(".displayResultDiv");
 const list = document.querySelector("#descList");
@@ -52,6 +53,7 @@ function showResult(){
     }
     fetchAztroHoro(zodiacSign, dayDropdown);
     fetchDevbrewerShort(zodiacSign);
+    fetchDevbrewerLong(zodiacSign);
 }
 
 function fetchAztroHoro(zodiacSign, dayDropdown){
@@ -87,7 +89,7 @@ function renderHoroScope(horoObj, zodiacSign){
 }
 
 function fetchDevbrewerShort(zodiacSign){
-    fetch(`${baseDevbrewerURL}/${zodiacSign}`, {
+    fetch(`${baseDevbrewerShortURL}/${zodiacSign}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
@@ -117,20 +119,19 @@ function renderShort(horoObj, zodiacSign){
         friendZodiac = document.querySelector("#friendZodiac"),
         careerZodiac = document.querySelector("#careerZodiac");
 
-        title.innerText = "Matches";
-        love.innerText = "LOVE";
-        friend.innerText = "FRIENDSHIP";
-        career.innerText = "CAREER";
-        loveImg.src = zodiacImgs(horoObj["Matchs"].Love);
-        friendImg.src = zodiacImgs(horoObj["Matchs"].Friendship);
-        careerImg.src = zodiacImgs(horoObj["Matchs"].Career);
-        loveZodiac.innerText = horoObj["Matchs"].Love;
-        friendZodiac.innerText = horoObj["Matchs"].Friendship;
-        careerZodiac.innerText = horoObj["Matchs"].Career;
+    title.innerText = "Matches";
+    love.innerText = "LOVE";
+    friend.innerText = "FRIENDSHIP";
+    career.innerText = "CAREER";
+    loveImg.src = zodiacImgs(horoObj["Matchs"].Love);
+    friendImg.src = zodiacImgs(horoObj["Matchs"].Friendship);
+    careerImg.src = zodiacImgs(horoObj["Matchs"].Career);
+    loveZodiac.innerText = horoObj["Matchs"].Love;
+    friendZodiac.innerText = horoObj["Matchs"].Friendship;
+    careerZodiac.innerText = horoObj["Matchs"].Career;
 
-        divContainers.append(love, friend, career, loveImg, friendImg, careerImg, loveZodiac, friendZodiac, careerZodiac);
-        loveMatchDiv.append(title, divContainers);
-        
+    divContainers.append(love, friend, career, loveImg, friendImg, careerImg, loveZodiac, friendZodiac, careerZodiac);
+    loveMatchDiv.append(title, divContainers);
 }
 
 function zodiacImgs(matchZodiac){
@@ -162,4 +163,21 @@ function zodiacImgs(matchZodiac){
             break;
     }
     return imgRef;
+}
+
+function fetchDevbrewerLong(zodiacSign){
+    fetch(`${baseDevbrewerLongURL}/${zodiacSign}`, {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
+		"x-rapidapi-host": "devbrewer-horoscope.p.rapidapi.com"
+	    }
+    })
+    .then(resp => resp.json())
+    .then(horoObj => console.log(horoObj)) //renderLong(horoObj))
+    .catch(err => console.log(err));
+}
+
+function renderLong(horoObj){
+
 }
