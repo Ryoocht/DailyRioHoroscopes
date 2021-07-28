@@ -1,5 +1,8 @@
 const baseAztroURL = "https://sameer-kumar-aztro-v1.p.rapidapi.com";
+const baseDevbrewerURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short";
 const searchForm = document.querySelector("#search-form");
+const displayResultDiv = document.querySelector(".displayResultDiv");
+const list = document.querySelector("#descList");
 
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
@@ -7,7 +10,6 @@ searchForm.addEventListener("submit", e => {
 });
 
 function getZodiacSigns(day, month){
-    console.log(day, month)
     let zodiacName = "";
     if(month < 13 && day < 32){
         if (month == 3 && day >= 21 || month == 4 && day <= 19) {
@@ -48,6 +50,11 @@ function showResult(){
     if(dayDropdown === "selectTab"){
         return alert("Select Horoscope day")
     }
+    fetchAztroHoro(zodiacSign, dayDropdown);
+    fetchDevbrewerShort(zodiacSign);
+}
+
+function fetchAztroHoro(zodiacSign, dayDropdown){
     fetch(`${baseAztroURL}/?sign=${zodiacSign}&day=${dayDropdown}`, {
         "method": "POST",
 	    "headers": {
@@ -56,24 +63,103 @@ function showResult(){
 	    }
     })
     .then(resp => resp.json())
-    .then(horoObj => renderHoroScope(horoObj))
+    .then(horoObj => renderHoroScope(horoObj, zodiacSign))
     .catch(err => console.error(err));
 }
 
-
-function renderHoroScope(horoObj){
-    const displayResultDiv = document.querySelector(".displayResultDiv");
+function renderHoroScope(horoObj, zodiacSign){
     const zodiac = document.createElement("h1"),
+        compatibility = document.createElement("h3"),
         color = document.createElement("h3"),
         number = document.createElement("h3"),
         time = document.createElement("h3"),
         mood = document.createElement("h3"),
-        desc = document.createElement("p");
-    zodiac.innerText = `Zodiac Sign: ${horoObj.compatibility}`;
+        desc = document.createElement("li");
+    zodiac.innerText = `Your Zodiac Sign: ${zodiacSign}`;
+    compatibility.innerText = `Zodiac Compatibility: ${horoObj.compatibility}`;
     color.innerText = `Lucky Color: ${horoObj.color}`;
     number.innerText = `Lucky Number: ${horoObj.lucky_number}`;
     time.innerText = `Lucky Time: ${horoObj.lucky_time}`;
     mood.innerText = `Mood: ${horoObj.mood}`;
     desc.innerText = horoObj.description;
-    displayResultDiv.append(zodiac, color, number, time, mood, desc);
+    list.appendChild(desc);
+    displayResultDiv.append(zodiac ,compatibility, color, number, time, mood, list);
+}
+
+function fetchDevbrewerShort(zodiacSign){
+    fetch(`${baseDevbrewerURL}/${zodiacSign}`, {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
+		"x-rapidapi-host": "devbrewer-horoscope.p.rapidapi.com"
+	}
+    })
+    .then(resp => resp.json())
+    .then(horoObj => renderShort(horoObj, zodiacSign))
+    .catch(err => console.error(err));
+}
+
+function renderShort(horoObj, zodiacSign){
+    const desc = document.createElement("li");
+    desc.innerText = horoObj[`${zodiacSign}`].Today;
+    list.appendChild(desc);
+    
+    const loveMatchDiv = document.querySelector(".loveMatchDiv"),
+        title = document.querySelector(".title"),
+        divContainers = document.querySelector("divContainers"),
+        love = document.querySelector("#love"),
+        friend = document.querySelector("#friendship"),
+        career = document.querySelector("#career"),
+        loveImg = document.querySelector("#loveImg"),
+        friendImg = document.querySelector("#friendImg"),
+        careerImg = document.querySelector("#careerImg"),
+        loveZodiac = document.querySelector("#loveZodiac"),
+        friendZodiac = document.querySelector("#friendZodiac"),
+        careerZodiac = document.querySelector("#careerZodiac");
+
+        title.innerText = "Matches";
+        love.innerText = "LOVE";
+        friend.innerText = "FRIENDSHIP";
+        career.innerText = "CAREER";
+        loveImg.src = zodiacImgs(horoObj["Matchs"].Love);
+        friendImg.src = zodiacImgs(horoObj["Matchs"].Friendship);
+        careerImg.src = zodiacImgs(horoObj["Matchs"].Career);
+        loveZodiac.innerText = horoObj["Matchs"].Love;
+        friendZodiac.innerText = horoObj["Matchs"].Friendship;
+        careerZodiac.innerText = horoObj["Matchs"].Career;
+
+        divContainers.append(love, friend, career, loveImg, friendImg, careerImg, loveZodiac, friendZodiac, careerZodiac);
+        loveMatchDiv.append(title, divContainers);
+        
+}
+
+function zodiacImgs(matchZodiac){
+    let imgRef;
+    switch (matchZodiac) {
+        case "Aries": imgRef =  "./img/zodiacImgs/Aries.png"
+            break;
+        case "Taurus": imgRef =  "./img/zodiacImgs/Taurus.png"
+            break;
+        case "Gemini": imgRef =  "./img/zodiacImgs/Gemini.png"
+            break;
+        case "Cancer": imgRef =  "./img/zodiacImgs/Cancer.png"
+            break;
+        case "Leo": imgRef =  "./img/zodiacImgs/Leo.png"
+            break;
+        case "Virgo": imgRef =  "./img/zodiacImgs/Virgo.png"
+            break;
+        case "Libra": imgRef =  "./img/zodiacImgs/Libra.png"
+            break;
+        case "Scorpio": imgRef =  "./img/zodiacImgs/Scorpio.png"
+            break;
+        case "Sagittarius": imgRef =  "./img/zodiacImgs/Saggitarius.png"
+            break;
+        case "Capricorn": imgRef =  "./img/zodiacImgs/Capricorn.png"
+            break;
+        case "Aquarius": imgRef =  "./img/zodiacImgs/Aquarius.png"
+            break;
+        case "Pisces": imgRef =  "./img/zodiacImgs/Pisces.png"
+            break;
+    }
+    return imgRef;
 }
