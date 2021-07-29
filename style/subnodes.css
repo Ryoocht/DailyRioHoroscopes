@@ -1,0 +1,36 @@
+/* love match div */
+.subtitleContainers{
+    display: inline-block;
+    width: 33%;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+}
+
+.matchContainers {
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+}
+
+.img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: solid 3px black;
+    margin: 3px;
+}
+
+/* Love Calculator div */
+#loveCalculatorEvent {
+    text-align: center;
+}
+
+
+/* weather div */

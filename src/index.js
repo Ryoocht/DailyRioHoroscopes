@@ -1,17 +1,24 @@
 const baseAztroURL = "https://sameer-kumar-aztro-v1.p.rapidapi.com";
 const baseDevbrewerShortURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short";
 const baseDevbrewerLongURL = "https://devbrewer-horoscope.p.rapidapi.com/today/long";
+const baseLoveCalculatorURL = "https://love-calculator.p.rapidapi.com/getPercentage";
 const searchForm = document.querySelector("#search-form");
 const displayResultDiv = document.querySelector(".displayResultDiv");
 const list = document.querySelector("#descList");
+const calculateForm = document.querySelector("#calculateForm");
 
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
     showResult();
 });
 
+calculateForm.addEventListener("submit", e => {
+    e.preventDefault();
+    checkResult();
+})
+
 function getZodiacSigns(day, month){
-    let zodiacName = "";
+    let zodiacName;
     if(month < 13 && day < 32){
         if (month == 3 && day >= 21 || month == 4 && day <= 19) {
             return zodiacName = "Aries";
@@ -106,9 +113,7 @@ function renderShort(horoObj, zodiacSign){
     desc.innerText = horoObj[`${zodiacSign}`].Today;
     list.appendChild(desc);
     
-    const loveMatchDiv = document.querySelector(".loveMatchDiv"),
-        title = document.querySelector(".title"),
-        divContainers = document.querySelector(".divContainers"),
+    const title = document.querySelector(".title"),
         love = document.querySelector("#love"),
         friend = document.querySelector("#friendship"),
         career = document.querySelector("#career"),
@@ -129,9 +134,6 @@ function renderShort(horoObj, zodiacSign){
     loveZodiac.innerText = horoObj["Matchs"].Love;
     friendZodiac.innerText = horoObj["Matchs"].Friendship;
     careerZodiac.innerText = horoObj["Matchs"].Career;
-
-    divContainers.append(love, friend, career, loveImg, friendImg, careerImg, loveZodiac, friendZodiac, careerZodiac);
-    loveMatchDiv.append(title, divContainers);
 }
 
 function zodiacImgs(matchZodiac){
@@ -184,17 +186,52 @@ function renderLong(horoObj, zodiacSign){
         healthContainer = document.querySelector("#healthContainer"),
         careerContainer = document.querySelector("#careerContainer"),
         loveContainer = document.querySelector("#loveContainer"),
-        daily = document.querySelector("#daily"),
-        health = document.querySelector("#health"),
-        career = document.querySelector("#career"),
-        love = document.querySelector("#love");
+        daily = document.querySelector("#dailyDesc"),
+        health = document.querySelector("#healthDesc"),
+        career = document.querySelector("#careerDesc"),
+        love = document.querySelector("#loveDesc"),
+        loveCalculatorEvent = document.querySelector("#loveCalculatorEvent");
     daily.innerText = horoObj[`${zodiacSign}`].Daily;
     health.innerText = horoObj[`${zodiacSign}`].Health;
     career.innerText = horoObj[`${zodiacSign}`].Career;
-    love.innerText = horoObj[`${zodiacSign}`].love;
+    love.innerText = horoObj[`${zodiacSign}`].Love;
     dailyContainer.appendChild(daily);
     healthContainer.appendChild(health);
     careerContainer.appendChild(career);
     loveContainer.appendChild(love);
     learnMore.append(dailyContainer, healthContainer, careerContainer, loveContainer);
+
+    // loveCalculatorEvent.addEventListener("click", ) //invisible div will be appeared
+}
+
+function checkResult(){
+    const yourName = document.querySelector("#yourName").value;
+    const partnerName = document.querySelector("#partnerName").value;
+    fetchLoveCalculator(yourName, partnerName);
+}
+
+function fetchLoveCalculator(yourName, partnerName){
+    fetch(`${baseLoveCalculatorURL}?fname=${yourName}&sname=${partnerName}`, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
+            "x-rapidapi-host": "love-calculator.p.rapidapi.com"
+        }
+    })
+    .then(resp => resp.json())
+    .then(result => renderLoveResult(result))
+    .catch(err => console.error(err));
+}
+
+function renderLoveResult(result){
+    const calculateResult = document.querySelector("#calculateResult"),
+        heartImg = document.querySelector("#heartImg"),
+        comment = document.querySelector("#comment");
+    calculateResult.innerText = `${result.percentage}%`;
+    comment.innerText = `Comment: ${result.result}`;
+    if(parseInt(result.percentage) >= 50){
+        heartImg.src = "./img/hearts/heart.png";
+    } else {
+        heartImg.src = "./img/hearts/breakHeart.png";
+    }
 }

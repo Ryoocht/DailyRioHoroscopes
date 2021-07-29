@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Rio Horoscopes</title>
+    <link rel="stylesheet" href="./style/main.css">
+    <link rel="stylesheet" href="./style/subnodes.css">
     <script src="./src/index.js" defer></script>
 </head>
+
 <body>
     <form id="search-form">
         <input type="text" id="day-input" placeholder="dd">
@@ -21,37 +25,61 @@
         </select>
         <button id="inputSubmitBtn">Go</button>
     </form>
+
     <div class="displayResultDiv">
         <ul id="descList"></ul>
     </div>
     <div class="learnMorediv">
-        <div id="dailyContainer"><p id="daily"></p></div>
-        <div id="healthContainer"><p id="health"></p></div>
-        <div id="careerContainer"><p id="career"></p></div>
-        <div id="loveContainer"><p id="love"></p></div>
-    </div>
-    <div class="loveMatchDiv">
-        <h1 class="title"></h1>
-        <div class="divContainers">
-            <h3 id="love"></h3>
-            <h3 id="friendship"></h3>
-            <h3 id="career"></h3>
-            <img class="img" id="loveImg">
-            <img class="img" id="friendImg">
-            <img class="img" id="careerImg">
-            <p class="zodiac" id="loveZodiac"></p>
-            <p class="zodiac" id="friendZodiac"></p>
-            <p class="zodiac" id="careerZodiac"></p>
+        <div id="dailyContainer">
+            <p id="dailyDesc"></p>
+        </div>
+        <div id="healthContainer">
+            <p id="healthDesc"></p>
+        </div>
+        <div id="careerContainer">
+            <p id="careerDesc"></p>
+        </div>
+        <div id="loveContainer">
+            <p id="loveDesc"></p>
         </div>
     </div>
-    <div class="luckyTimeWeatherDiv"></div>
-        <!-- <h1 class="title"></h1>
-        <div class="divContainers">
-        </div> -->
-    <div class="celebMatchDiv">
-        <!-- <h1 class="title"></h1>
-        <div class="divContainers">
-        </div> -->
+
+    <div class="subtitleContainers">
+        <h1 class="title"></h1>
+        <div class="matchContainers">
+            <h3 id="love"></h3>
+            <img class="img" id="loveImg">
+            <p class="zodiac" id="loveZodiac"></p>
+        </div>
+        <div class="matchContainers">
+            <h3 id="friendship"></h3>
+            <img class="img" id="friendImg">
+            <p class="zodiac" id="friendZodiac"></p>
+        </div>
+        <div class="matchContainers">
+            <h3 id="career"></h3>
+            <img class="img" id="careerImg">
+            <p class="zodiac" id="careerZodiac"></p>
+        </div>
+        <a href="#" id="loveCalculatorEvent"><p>Try Love Calculator</p></a>
+    </div>
+    <div class="subtitleContainers">
+
+    </div>
+    <div class="subtitleContainers">
+
+    </div>
+    <div id="loveCalculator">
+        <h2>Love Calculator</h2>
+        <form id="calculateForm">
+            <label for="result" id="calculateResult"></label>
+            <input type="text" name="yourName" id="yourName" placeholder="Your First Name">
+            <img id="heartImg">
+            <input type="text" name="partnerName" id="partnerName" placeholder="Partner's First Name">
+            <button id="checkBtn">Check</button>
+            <p id="comment"></p>
+        </form>
     </div>
 </body>
+
 </html>
