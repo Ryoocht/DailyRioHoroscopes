@@ -108,7 +108,7 @@ function renderShort(horoObj, zodiacSign){
     
     const loveMatchDiv = document.querySelector(".loveMatchDiv"),
         title = document.querySelector(".title"),
-        divContainers = document.querySelector("divContainers"),
+        divContainers = document.querySelector(".divContainers"),
         love = document.querySelector("#love"),
         friend = document.querySelector("#friendship"),
         career = document.querySelector("#career"),
@@ -174,10 +174,27 @@ function fetchDevbrewerLong(zodiacSign){
 	    }
     })
     .then(resp => resp.json())
-    .then(horoObj => console.log(horoObj)) //renderLong(horoObj))
+    .then(horoObj => renderLong(horoObj, zodiacSign))
     .catch(err => console.log(err));
 }
 
-function renderLong(horoObj){
-
+function renderLong(horoObj, zodiacSign){
+    const learnMore = document.querySelector(".learnMorediv"),
+        dailyContainer = document.querySelector("#dailyContainer"),
+        healthContainer = document.querySelector("#healthContainer"),
+        careerContainer = document.querySelector("#careerContainer"),
+        loveContainer = document.querySelector("#loveContainer"),
+        daily = document.querySelector("#daily"),
+        health = document.querySelector("#health"),
+        career = document.querySelector("#career"),
+        love = document.querySelector("#love");
+    daily.innerText = horoObj[`${zodiacSign}`].Daily;
+    health.innerText = horoObj[`${zodiacSign}`].Health;
+    career.innerText = horoObj[`${zodiacSign}`].Career;
+    love.innerText = horoObj[`${zodiacSign}`].love;
+    dailyContainer.appendChild(daily);
+    healthContainer.appendChild(health);
+    careerContainer.appendChild(career);
+    loveContainer.appendChild(love);
+    learnMore.append(dailyContainer, healthContainer, careerContainer, loveContainer);
 }
