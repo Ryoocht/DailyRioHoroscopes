@@ -2,11 +2,23 @@ const baseAztroURL = "https://sameer-kumar-aztro-v1.p.rapidapi.com";
 const baseDevbrewerShortURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short";
 const baseDevbrewerLongURL = "https://devbrewer-horoscope.p.rapidapi.com/today/long";
 const baseLoveCalculatorURL = "https://love-calculator.p.rapidapi.com/getPercentage";
-const baseCityGeoLocationURL = "https://devru-latitude-longitude-find-v1.p.rapidapi.com/latlon.php";
+const baseOpenWeatherURL = "https://api.openweathermap.org/data/2.5";
 const searchForm = document.querySelector("#search-form");
 const displayResultDiv = document.querySelector(".displayResultDiv");
 const list = document.querySelector("#descList");
 const calculateForm = document.querySelector("#calculateForm");
+let DayandTime = function(){
+    this.selectDay;
+    this.setLuckyTime;
+    return this;
+}
+DayandTime.prototype.setSetelectDay = function(selectDay){
+    this.selectDay = selectDay;
+}
+DayandTime.prototype.setLuckyTime = function(luckyTime){
+    this.setLuckyTime = luckyTime;
+}
+let dayandtime = new DayandTime();
 
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
@@ -64,10 +76,14 @@ function showResult(){
         return alert("Current Location cannot be empty");
     }
 
+    dayandtime.setSetelectDay(dayDropdown);
+
     fetchAztroHoro(zodiacSign, dayDropdown);
     fetchDevbrewerShort(zodiacSign);
     fetchDevbrewerLong(zodiacSign);
-    fetchCityGeoLocation(location);
+    fetchCurrentWeather(location);
+    convertToTimestamp();
+
 }
 
 function fetchAztroHoro(zodiacSign, dayDropdown){
@@ -84,13 +100,15 @@ function fetchAztroHoro(zodiacSign, dayDropdown){
 }
 
 function renderHoroScope(horoObj, zodiacSign){
-    const zodiac = document.createElement("h1"),
-        compatibility = document.createElement("h3"),
-        color = document.createElement("h3"),
-        number = document.createElement("h3"),
-        time = document.createElement("h3"),
-        mood = document.createElement("h3"),
+    const zodiac = document.querySelector("#yourZodiac"),
+        compatibility = document.querySelector("#compatibility"),
+        color = document.querySelector("#lucky_color"),
+        number = document.querySelector("#lucky_number"),
+        time = document.querySelector("#lucky_time"),
+        mood = document.querySelector("#mood"),
+        descList = document.querySelector("#descList"),
         desc = document.createElement("li");
+
     zodiac.innerText = `Your Zodiac Sign: ${zodiacSign}`;
     compatibility.innerText = `Zodiac Compatibility: ${horoObj.compatibility}`;
     color.innerText = `Lucky Color: ${horoObj.color}`;
@@ -98,8 +116,8 @@ function renderHoroScope(horoObj, zodiacSign){
     time.innerText = `Lucky Time: ${horoObj.lucky_time}`;
     mood.innerText = `Mood: ${horoObj.mood}`;
     desc.innerText = horoObj.description;
-    list.appendChild(desc);
-    displayResultDiv.append(zodiac ,compatibility, color, number, time, mood, list);
+    descList.appendChild(desc);
+    dayandtime.setLuckyTime(horoObj.lucky_time);
 }
 
 function fetchDevbrewerShort(zodiacSign){
@@ -188,25 +206,16 @@ function fetchDevbrewerLong(zodiacSign){
 }
 
 function renderLong(horoObj, zodiacSign){
-    const learnMore = document.querySelector(".learnMorediv"),
-        dailyContainer = document.querySelector("#dailyContainer"),
-        healthContainer = document.querySelector("#healthContainer"),
-        careerContainer = document.querySelector("#careerContainer"),
-        loveContainer = document.querySelector("#loveContainer"),
-        daily = document.querySelector("#dailyDesc"),
+    const daily = document.querySelector("#dailyDesc"),
         health = document.querySelector("#healthDesc"),
         career = document.querySelector("#careerDesc"),
         love = document.querySelector("#loveDesc"),
         loveCalculatorEvent = document.querySelector("#loveCalculatorEvent");
+
     daily.innerText = horoObj[`${zodiacSign}`].Daily;
     health.innerText = horoObj[`${zodiacSign}`].Health;
     career.innerText = horoObj[`${zodiacSign}`].Career;
     love.innerText = horoObj[`${zodiacSign}`].Love;
-    dailyContainer.appendChild(daily);
-    healthContainer.appendChild(health);
-    careerContainer.appendChild(career);
-    loveContainer.appendChild(love);
-    learnMore.append(dailyContainer, healthContainer, careerContainer, loveContainer);
 
     // loveCalculatorEvent.addEventListener("click", ) //invisible div will be appeared
 }
@@ -243,17 +252,36 @@ function renderLoveResult(result){
     }
 }
 
-// City Geo-Location LookUp to get Lat & Lon for weather api
-function fetchCityGeoLocation(location){
-    console.log(location)
-    fetch(`${baseCityGeoLocationURL}?location=${location}`, {
-	"method": "GET",
-	"headers": {
-		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
-		"x-rapidapi-host": "devru-latitude-longitude-find-v1.p.rapidapi.com"
-	}
-    })
+// OpenWeatherMap(weather) to get latitude & longitude for onecall
+function fetchCurrentWeather(location){
+    fetch(`${baseOpenWeatherURL}/weather?q=${location}&appid=974057dc1632b35f6f14e11fe1ca1394`)
     .then(resp => resp.json())
-    .then(location => console.log(location))
+    .then(latlonObj => getLatLonData(latlonObj))
     .catch(err => console.error(err));
+}
+
+function getLatLonData(latlonObj){
+    let latitude = latlonObj["coord"].lat;
+    let longitude = latlonObj["coord"].lon;
+    fetchOneCall(latitude, longitude);
+}
+
+// Get hourly/daily weather based on the lucky-time
+function fetchOneCall(latitude, longitude){
+    fetch(`${baseOpenWeatherURL}/onecall?lat=${latitude}&lon=${longitude}&exclude=current,minutely&appid=974057dc1632b35f6f14e11fe1ca1394`)
+    .then(resp => resp.json())
+    .then(resultObj => {
+        // let calculateTime =  
+        convertToTimestamp(dayandtime);
+        //getHourlyWeather(resultObj, calculateTime);
+    })
+    .catch(err => console.log(err));
+}
+
+//Convert Date to unix_timestamp
+function convertToTimestamp(){
+    const today = new Date(),
+        tomorrow = today.getDate() + 1,
+        yesterday = today.getDate() - 1;
+    console.log(dayandtime)
 }
