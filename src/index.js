@@ -2,6 +2,7 @@ const baseAztroURL = "https://sameer-kumar-aztro-v1.p.rapidapi.com";
 const baseDevbrewerShortURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short";
 const baseDevbrewerLongURL = "https://devbrewer-horoscope.p.rapidapi.com/today/long";
 const baseLoveCalculatorURL = "https://love-calculator.p.rapidapi.com/getPercentage";
+const baseCityGeoLocationURL = "https://devru-latitude-longitude-find-v1.p.rapidapi.com/latlon.php";
 const searchForm = document.querySelector("#search-form");
 const displayResultDiv = document.querySelector(".displayResultDiv");
 const list = document.querySelector("#descList");
@@ -58,9 +59,15 @@ function showResult(){
     if(dayDropdown === "selectTab"){
         return alert("Select Horoscope day")
     }
+    const location = document.querySelector("#location").value;
+    if(location === ""){
+        return alert("Current Location cannot be empty");
+    }
+
     fetchAztroHoro(zodiacSign, dayDropdown);
     fetchDevbrewerShort(zodiacSign);
     fetchDevbrewerLong(zodiacSign);
+    fetchCityGeoLocation(location);
 }
 
 function fetchAztroHoro(zodiacSign, dayDropdown){
@@ -234,4 +241,19 @@ function renderLoveResult(result){
     } else {
         heartImg.src = "./img/hearts/breakHeart.png";
     }
+}
+
+// City Geo-Location LookUp to get Lat & Lon for weather api
+function fetchCityGeoLocation(location){
+    console.log(location)
+    fetch(`${baseCityGeoLocationURL}?location=${location}`, {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
+		"x-rapidapi-host": "devru-latitude-longitude-find-v1.p.rapidapi.com"
+	}
+    })
+    .then(resp => resp.json())
+    .then(location => console.log(location))
+    .catch(err => console.error(err));
 }
