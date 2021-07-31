@@ -7,18 +7,8 @@ const searchForm = document.querySelector("#search-form");
 const displayResultDiv = document.querySelector(".displayResultDiv");
 const list = document.querySelector("#descList");
 const calculateForm = document.querySelector("#calculateForm");
-let DayandTime = function(){
-    this.selectDay;
-    this.setLuckyTime;
-    return this;
-}
-DayandTime.prototype.setSetelectDay = function(selectDay){
-    this.selectDay = selectDay;
-}
-DayandTime.prototype.setLuckyTime = function(luckyTime){
-    this.setLuckyTime = luckyTime;
-}
-let dayandtime = new DayandTime();
+let selectedDay;
+let luckyTime;
 
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
@@ -75,15 +65,13 @@ function showResult(){
     if(location === ""){
         return alert("Current Location cannot be empty");
     }
-
-    dayandtime.setSetelectDay(dayDropdown);
+    selectedDay = dayDropdown;
 
     fetchAztroHoro(zodiacSign, dayDropdown);
     fetchDevbrewerShort(zodiacSign);
     fetchDevbrewerLong(zodiacSign);
     fetchCurrentWeather(location);
-    convertToTimestamp();
-
+    
 }
 
 function fetchAztroHoro(zodiacSign, dayDropdown){
@@ -117,7 +105,7 @@ function renderHoroScope(horoObj, zodiacSign){
     mood.innerText = `Mood: ${horoObj.mood}`;
     desc.innerText = horoObj.description;
     descList.appendChild(desc);
-    dayandtime.setLuckyTime(horoObj.lucky_time);
+    luckyTime = horoObj.lucky_time;
 }
 
 function fetchDevbrewerShort(zodiacSign){
@@ -138,7 +126,7 @@ function renderShort(horoObj, zodiacSign){
     desc.innerText = horoObj[`${zodiacSign}`].Today;
     list.appendChild(desc);
     
-    const title = document.querySelector(".title"),
+    const title = document.querySelector("#matchTitle"),
         love = document.querySelector("#love"),
         friend = document.querySelector("#friendship"),
         career = document.querySelector("#career"),
@@ -270,18 +258,121 @@ function getLatLonData(latlonObj){
 function fetchOneCall(latitude, longitude){
     fetch(`${baseOpenWeatherURL}/onecall?lat=${latitude}&lon=${longitude}&exclude=current,minutely&appid=974057dc1632b35f6f14e11fe1ca1394`)
     .then(resp => resp.json())
-    .then(resultObj => {
-        // let calculateTime =  
-        convertToTimestamp(dayandtime);
-        //getHourlyWeather(resultObj, calculateTime);
-    })
+    .then(resultObj => getHourlyWeather(resultObj, latitude, longitude))
     .catch(err => console.log(err));
 }
 
+function luckyTimeInterval(){
+    return new Promise(resolve => {
+        let setIntervalId = setInterval(findLuckyTimeValue, 500);
+        const maxRetryCount = 10;
+        let retryCount = 0;
+        function findLuckyTimeValue(){
+            retryCount++;
+            if(retryCount > maxRetryCount){
+                clearInterval(setIntervalId);
+                console.error("Cound not get lucky time");
+            }
+            if(luckyTime !== undefined){
+                clearInterval(setIntervalId);
+                resolve(luckyTime);
+            }
+        }
+    })
+}
+
+async function getLuckyTime(){
+    const result = await luckyTimeInterval();
+    return result;
+}
+
 //Convert Date to unix_timestamp
-function convertToTimestamp(){
-    const today = new Date(),
-        tomorrow = today.getDate() + 1,
-        yesterday = today.getDate() - 1;
-    console.log(dayandtime)
+function convertToTimestamp(luckyTime, selectedDay){
+    //Today
+    let now = new Date(),
+        nYear = now.getFullYear(),
+        nMonth = now.getMonth() + 1,
+        nDate = now.getDate();
+        today = `${nYear}-${nMonth}-${nDate}`;
+    //Yesterday
+    let dayBefore = new Date(nYear, nMonth, (nDate - 1)),
+        yYear = dayBefore.getFullYear(),
+        yMonth = dayBefore.getMonth(),
+        yDate = dayBefore.getDate();
+        yesterday = `${yYear}-${yMonth}-${yDate}`;
+    //Tomorrow
+    let dayAfter = new Date(nYear, nMonth, (nDate + 1)),
+        tYear = dayAfter.getFullYear(),
+        tMonth = dayAfter.getMonth(),
+        tDate = dayAfter.getDate();
+        tomorrow = `${tYear}-${tMonth}-${tDate}`;
+    //Split time and am/pm
+    let digit = parseInt(luckyTime.match(/^\d{1,2}/));
+    let ampm = luckyTime.match(/am$|pm$/gi);
+    let formatTime;
+    
+    function timeConverter(day){
+        if(ampm[0] === "pm"){
+            const time = `${digit + 12}:00:00`;
+            formatTime = day + " " + time;
+        } else {
+            if(digit < 10){
+                const time = `0${digit}:00:00`;
+                formatTime = day + " " + time;
+            } else {
+                const time = `${digit}:00:00`;
+                formatTime = day + " " + time;
+            }
+        }
+    }
+
+    switch(selectedDay){
+        case "today": 
+            timeConverter(today);
+            break;
+        case "yesterday":
+            timeConverter(yesterday);
+            break;
+        case "tomorrow":
+            timeConverter(tomorrow);
+            break;
+    }
+    let timeStampMils = String(Date.parse(formatTime));
+    const timeStamp = timeStampMils.match(/\d{10}/);
+    return timeStamp[0];
+}
+
+function getHourlyWeather(resultObj, latitude, longitude){
+    const title = document.querySelector("#weatherTitle"),
+        location = document.querySelector("#weatherLocation"),
+        luckyTime = document.querySelector("#luckyTime"),
+        temperature = document.querySelector("#temperature"),
+        description = document.querySelector("#description"),
+        feelslike = document.querySelector("#feelslike");
+    title.innerText = "Lucky Time Weather";
+
+    const hourlyData = async ()=> {
+        const timeStamp = await getLuckyTime().then(result => convertToTimestamp(result, selectedDay))
+        if(parseInt(timeStamp) >= (Date.parse(new Date())/1000)){
+            for (let i = 0; i < resultObj["hourly"].length; i++) {
+                const dt = resultObj["hourly"][i]["dt"];
+                if(parseInt(timeStamp) === dt){
+                    const locationStr = resultObj["timezone"];
+                    location.innerText = locationStr.split("/")[1];
+                    let unixDate = new Date(timeStamp * 1000);
+                    luckyTime.innerText = `${unixDate.getHours()}:00`;
+
+                    console.log(resultObj["hourly"][i])
+                }
+            }
+        } else {
+            fetch(`${baseOpenWeatherURL}/onecall/timemachine?lat=${latitude}&lon=${longitude}&dt=${timeStamp}&appid=974057dc1632b35f6f14e11fe1ca1394`)
+            .then(resp => resp.json())
+            .then(hourlyObj => {
+                hourlyObj["current"]
+            })
+            .catch(err => console.log(err));
+        }
+    }
+    hourlyData();
 }
