@@ -15,6 +15,7 @@ let luckyTime;
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
     showResult();
+    visibilityOn();
 });
 
 calculateForm.addEventListener("submit", e => {
@@ -89,7 +90,8 @@ function fetchAztroHoro(zodiacSign, dayDropdown){
 }
 
 function renderHoroScope(horoObj, zodiacSign){
-    const zodiac = document.querySelector("#yourZodiac"),
+    const topZodiacImg = document.querySelector("#resultZodiacImg"),
+        zodiac = document.querySelector("#yourZodiac"),
         compatibility = document.querySelector("#compatibility"),
         color = document.querySelector("#lucky_color"),
         number = document.querySelector("#lucky_number"),
@@ -98,17 +100,49 @@ function renderHoroScope(horoObj, zodiacSign){
         descList = document.querySelector("#descList"),
         desc = document.createElement("li");
 
-    zodiac.innerText = `Your Zodiac Sign: ${zodiacSign}`;
-    compatibility.innerText = `Zodiac Compatibility: ${horoObj.compatibility}`;
-    color.innerText = `Lucky Color: ${horoObj.color}`;
-    number.innerText = `Lucky Number: ${horoObj.lucky_number}`;
-    time.innerText = `Lucky Time: ${horoObj.lucky_time}`;
-    mood.innerText = `Mood: ${horoObj.mood}`;
+    topZodiacImg.src = mainZodiacSign(zodiacSign);
+    zodiac.innerText = zodiacSign;
+    compatibility.innerText = horoObj.compatibility;
+    color.innerText = horoObj.color;
+    number.innerText = horoObj.lucky_number;
+    time.innerText = horoObj.lucky_time;
+    mood.innerText = horoObj.mood;
     desc.innerText = horoObj.description;
     descList.appendChild(desc);
     luckyTime = horoObj.lucky_time;
     fetchQuotes(horoObj.lucky_number);
     fetchJokes(horoObj.lucky_number);
+}
+
+function mainZodiacSign(zodiacSign){
+    let imgRef;
+    switch (zodiacSign) {
+        case "Aries": imgRef =  "./img/mainZodiacs/aries.png"
+            break;
+        case "Taurus": imgRef =  "./img/mainZodiacs/taurus.png"
+            break;
+        case "Gemini": imgRef =  "./img/mainZodiacs/gemini.png"
+            break;
+        case "Cancer": imgRef =  "./img/mainZodiacs/cancer.png"
+            break;
+        case "Leo": imgRef =  "./img/mainZodiacs/leo.png"
+            break;
+        case "Virgo": imgRef =  "./img/mainZodiacs/virgo.png"
+            break;
+        case "Libra": imgRef =  "./img/mainZodiacs/libra.png"
+            break;
+        case "Scorpio": imgRef =  "./img/mainZodiacs/scorpio.png"
+            break;
+        case "Sagittarius": imgRef =  "./img/mainZodiacs/sagittarius.png"
+            break;
+        case "Capricorn": imgRef =  "./img/mainZodiacs/capricorn.png"
+            break;
+        case "Aquarius": imgRef =  "./img/mainZodiacs/aquarius.png"
+            break;
+        case "Pisces": imgRef =  "./img/mainZodiacs/pisces.png"
+            break;
+        }
+    return imgRef;
 }
 
 function fetchDevbrewerShort(zodiacSign){
@@ -200,15 +234,12 @@ function renderLong(horoObj, zodiacSign){
     const daily = document.querySelector("#dailyDesc"),
         health = document.querySelector("#healthDesc"),
         career = document.querySelector("#careerDesc"),
-        love = document.querySelector("#loveDesc"),
-        loveCalculatorEvent = document.querySelector("#loveCalculatorEvent");
-
+        love = document.querySelector("#loveDesc");
+ 
     daily.innerText = horoObj[`${zodiacSign}`].Daily;
     health.innerText = horoObj[`${zodiacSign}`].Health;
     career.innerText = horoObj[`${zodiacSign}`].Career;
     love.innerText = horoObj[`${zodiacSign}`].Love;
-
-    // loveCalculatorEvent.addEventListener("click", ) //invisible div will be appeared
 }
 
 function checkResult(){
@@ -444,4 +475,9 @@ function renderJokes(jokeObj){
         setup.innerText = jokeObj["setup"];
         delivery.innerText = jokeObj["delivery"];
     }
+}
+
+function visibilityOn(){
+    let visible = document.querySelector("#visibility");
+    visible.style.visibility = "visible";
 }

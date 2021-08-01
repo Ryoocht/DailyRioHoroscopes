@@ -1,11 +1,19 @@
 /* love match div */
 .subtitleContainers{
     display: inline-block;
+    vertical-align: top;
     width: 33%;
-    height: auto;
+    min-height: 400px;
     align-items: center;
     justify-content: center;
-    background-color: red;
+    margin-top: 20px;
+    background: #FFEBEE;
+}
+
+.title {
+    text-align: center;
+    font-size: 2em;
+    margin-top: 20px;
 }
 
 .matchContainers {
@@ -13,10 +21,11 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    margin-top: 20px;
 }
 
-.title {
-    text-align: center;
+.matchTitle {
+    margin-bottom: 30px;
 }
 
 .img {
@@ -25,18 +34,66 @@
     border-radius: 50%;
     border: solid 3px black;
     margin: 3px;
+    margin-bottom: 30px;
+}
+
+.zodiac {
+    font-size: 2em;
+    font-weight: bold;
+    color: #FF5722;
+}
+
+#weatherContainer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#weatherLocation, #luckyTime {
+    font-size: 2.4em;
+    color: #FF5722;
+    font-weight: bold;
+}
+
+#tempandDesc {
+    position: relative;
+    margin: 30px;
+}
+
+#temperature {
+    display: inline-block;
+    font-size: 4em;
+    margin-right: 20px;
+}
+
+#description {
+    display: inline-block;
+    font-size: 4em;
+    margin-left: 20px;
+}
+
+#feelslike {
+    font-size: 2em;
+}
+
+.luckyNumberContainer{
+    margin: 15px;
+    font-size: 1.4em;
+}
+
+#jokeTitle {
+    margin-top: 60px;
 }
 
 /* Love Calculator div */
-#loveCalculatorEvent {
-    text-align: center;
-}
-
 #loveCalculator {
-    width: 50%;
+    width: 100%;
     align-items: center;
     text-align: center;
     justify-content: center;
+    margin-top: 20px;
+    padding-bottom: 50px;
+    padding-top: 20px;
+    background: #E0E0E0;
 }
 
 #calculateResult {
@@ -45,7 +102,6 @@
     justify-content: center;
     font-size: 40px;
 }
-
 
 #heartImg {
     width: 40px;
@@ -64,6 +120,36 @@
     font-size: 20px;
     text-align: center;
     height: 30px;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+    border-bottom: 3px solid black;
+    background: transparent;
+}
+.inputLayout::placeholder {
+    color: black;
 }
 
-/* weather div */
+#comment {
+    font-size: 2em;
+}
+
+#checkBtn {
+    width: 150px;
+    height: 40px;
+    margin-top: 10px;
+    font-size: 1.3em;
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: #5E35B1;
+    border: solid 2px #5E35B1;
+    border-radius: 3px;
+    background: transparent;
+}
+
+#checkBtn:hover {
+    background: #5E35B1;
+    color: white;
+}

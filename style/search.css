@@ -1,0 +1,107 @@
+/* configuration */
+*, *:before, *:after {
+	margin: 0;
+	padding: 0; 
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#searchBackground {
+    position: fixed;
+	border-style: none;
+	vertical-align: bottom;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+}
+
+#backgroundfilter {
+    position: fixed;
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+#mainTitle {
+    color: white;
+    display: block;
+    margin-left: 100px;
+    padding-top: 30px;
+    font-weight: lighter;
+    font-size: 3em;
+}
+
+#bold {
+    font-weight: bold;
+}
+
+#search-form {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    width: 700px;
+    height: auto;
+}
+
+#instruction {
+    font-size: 2.5em;
+    text-align: center;
+    color: white;
+}
+
+.inputContainer {
+    display: inline-block;
+    width: 49%;
+    margin-top: 10px;
+    padding:  15px 0 0;
+    vertical-align: top;
+}
+
+.form__label {
+    color: white;
+    font-size: 18px;
+}
+
+.inputStyle {
+    margin-top: 5px;
+    height: 30px;
+    width: 90%;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+    border-bottom: 3px solid #c2c2c2;
+    background: transparent;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.inputStyle::placeholder {
+    color: white;
+}
+
+option {
+    color: black;
+}
+
+#inputSubmitBtn {
+    width: 150px;
+    height: 40px;
+    margin-top: 10px;
+    font-size: 1.3em;
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: #92cdf1;
+    border: solid 2px #92cdf1;
+    border-radius: 3px;
+    background: transparent;
+}
+
+#inputSubmitBtn:hover {
+    background: #67c5ff;
+    color: white;
+}
