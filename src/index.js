@@ -3,6 +3,8 @@ const baseDevbrewerShortURL = "https://devbrewer-horoscope.p.rapidapi.com/today/
 const baseDevbrewerLongURL = "https://devbrewer-horoscope.p.rapidapi.com/today/long";
 const baseLoveCalculatorURL = "https://love-calculator.p.rapidapi.com/getPercentage";
 const baseOpenWeatherURL = "https://api.openweathermap.org/data/2.5";
+const baseQuotesURL = "https://quotejoy.p.rapidapi.com/list-quotes";
+const baseJokesURL = "https://jokeapi-v2.p.rapidapi.com/joke";
 const searchForm = document.querySelector("#search-form");
 const displayResultDiv = document.querySelector(".displayResultDiv");
 const list = document.querySelector("#descList");
@@ -71,7 +73,6 @@ function showResult(){
     fetchDevbrewerShort(zodiacSign);
     fetchDevbrewerLong(zodiacSign);
     fetchCurrentWeather(location);
-    
 }
 
 function fetchAztroHoro(zodiacSign, dayDropdown){
@@ -106,6 +107,8 @@ function renderHoroScope(horoObj, zodiacSign){
     desc.innerText = horoObj.description;
     descList.appendChild(desc);
     luckyTime = horoObj.lucky_time;
+    fetchQuotes(horoObj.lucky_number);
+    fetchJokes(horoObj.lucky_number);
 }
 
 function fetchDevbrewerShort(zodiacSign){
@@ -361,18 +364,84 @@ function getHourlyWeather(resultObj, latitude, longitude){
                     location.innerText = locationStr.split("/")[1];
                     let unixDate = new Date(timeStamp * 1000);
                     luckyTime.innerText = `${unixDate.getHours()}:00`;
-
-                    console.log(resultObj["hourly"][i])
+                    function kelToCel(kelvin){
+                        return Math.round((kelvin - 272.15) * 10) / 10;
+                    }
+                    temperature.innerText = `${kelToCel(resultObj["hourly"][i]["temp"])}°`;
+                    description.innerText = resultObj["hourly"][i]["weather"][0]["main"];
+                    feelslike.innerText = `Feels like ${kelToCel(resultObj["hourly"][i]["feels_like"])}°`;
                 }
             }
         } else {
             fetch(`${baseOpenWeatherURL}/onecall/timemachine?lat=${latitude}&lon=${longitude}&dt=${timeStamp}&appid=974057dc1632b35f6f14e11fe1ca1394`)
             .then(resp => resp.json())
             .then(hourlyObj => {
-                hourlyObj["current"]
+                const locationStr = hourlyObj["timezone"];
+                location.innerText = locationStr.split("/")[1];
+                let unixDate = new Date(hourlyObj["current"]["dt"] * 1000);
+                luckyTime.innerText = `${unixDate.getHours()}:00`;
+                function kelToCel(kelvin){
+                    return Math.round((kelvin - 272.15) * 10) / 10;
+                }
+                temperature.innerText = `${kelToCel(hourlyObj["current"]["temp"])}°`;
+                description.innerText = hourlyObj["current"]["weather"][0]["main"];
+                feelslike.innerText = `Feels like ${kelToCel(hourlyObj["current"]["feels_like"])}°`;
             })
             .catch(err => console.log(err));
         }
     }
     hourlyData();
+}
+
+function fetchQuotes(luckyNumber){
+    let page = 1;
+    if(luckyNumber < 10){
+        page = 1;
+    } else {
+        page = String(luckyNumber).slice(1);
+    }
+    fetch(`${baseQuotesURL}?page=${page}`, {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
+		"x-rapidapi-host": "quotejoy.p.rapidapi.com"
+	}
+    })
+    .then(resp => resp.json())
+    .then(quoteObj => renderQuotes(quoteObj, luckyNumber))
+    .catch(err => console.error(err));
+}
+
+function renderQuotes(quoteObj, luckyNumber){
+    const title = document.querySelector("#quoteTitle"),
+        quote = document.querySelector("#quote");
+    title.innerText = "Lucky Number Quotes";
+    quote.innerText = `"${quoteObj["quotes"][(String(luckyNumber).slice(-1))]["quote"]}"`;
+}
+
+function fetchJokes(luckyNumber){
+    fetch(`${baseJokesURL}/Any?idRange=${luckyNumber}&blacklistFlags=nsfw%2Cracist`, {
+        "method": "GET",
+	    "headers": {
+		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
+		"x-rapidapi-host": "jokeapi-v2.p.rapidapi.com"
+	    }
+    })
+    .then(resp => resp.json())
+    .then(jokeObj => renderJokes(jokeObj))
+    .catch(err => console.log(err));
+}
+
+function renderJokes(jokeObj){
+    const title = document.querySelector("#jokeTitle"),
+        setup = document.querySelector("#setup"),
+        delivery = document.querySelector("#delivery");
+    title.innerText = "Lucky Number Jokes";
+    if(jokeObj["error"] === true){
+        setup.innerText = "This is a censored jokes";
+        delivery.innerText = "No joke today."
+    } else {
+        setup.innerText = jokeObj["setup"];
+        delivery.innerText = jokeObj["delivery"];
+    }
 }
