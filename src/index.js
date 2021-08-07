@@ -1,14 +1,14 @@
-const baseAztroURL = "https://sameer-kumar-aztro-v1.p.rapidapi.com";
-const baseDevbrewerShortURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short";
-const baseDevbrewerLongURL = "https://devbrewer-horoscope.p.rapidapi.com/today/long";
-const baseLoveCalculatorURL = "https://love-calculator.p.rapidapi.com/getPercentage";
-const baseOpenWeatherURL = "https://api.openweathermap.org/data/2.5";
-const baseQuotesURL = "https://quotejoy.p.rapidapi.com/list-quotes";
-const baseJokesURL = "https://jokeapi-v2.p.rapidapi.com/joke";
-const searchForm = document.querySelector("#search-form");
-const displayResultDiv = document.querySelector(".displayResultDiv");
-const list = document.querySelector("#descList");
-const calculateForm = document.querySelector("#calculateForm");
+const baseAztroURL = "https://sameer-kumar-aztro-v1.p.rapidapi.com",
+    baseDevbrewerShortURL = "https://devbrewer-horoscope.p.rapidapi.com/today/short",
+    baseDevbrewerLongURL = "https://devbrewer-horoscope.p.rapidapi.com/today/long",
+    baseLoveCalculatorURL = "https://love-calculator.p.rapidapi.com/getPercentage",
+    baseOpenWeatherURL = "https://api.openweathermap.org/data/2.5",
+    baseQuotesURL = "https://quotejoy.p.rapidapi.com/list-quotes",
+    baseJokesURL = "https://jokeapi-v2.p.rapidapi.com/joke",
+    searchForm = document.querySelector("#search-form"),
+    displayResultDiv = document.querySelector(".displayResultDiv"),
+    descList = document.querySelector("#descList"),
+    calculateForm = document.querySelector("#calculateForm");
 let selectedDay;
 let luckyTime;
 
@@ -23,59 +23,33 @@ calculateForm.addEventListener("submit", e => {
     checkResult();
 })
 
-function getZodiacSigns(day, month){
-    let zodiacName;
-    if(month < 13 && day < 32){
-        if (month == 3 && day >= 21 || month == 4 && day <= 19) {
-            return zodiacName = "Aries";
-        } else if (month == 4 && day >= 20 || month == 5 && day <= 20) {
-            return zodiacName = "Taurus";
-        } else if (month == 5 && day >= 21 || month == 6 && day <= 21) {
-            return zodiacName = "Gemini";
-        } else if (month == 6 && day >= 22 || month == 7 && day <= 22) {
-            return zodiacName = "Cancer";
-        } else if (month == 7 && day >= 23 || month == 8 && day <= 22) {
-            return zodiacName = "Leo";
-        } else if (month == 8 && day >= 23 || month == 9 && day <= 22) {
-            return zodiacName = "Virgo";
-        } else if (month == 9 && day >= 23 || month == 10 && day <= 23) {
-            return zodiacName = "Libra";
-        } else if (month == 10 && day >= 24 || month == 11 && day <= 22) {
-            return zodiacName = "Scorpio";
-        } else if (month == 11 && day >= 23 || month == 12 && day <= 21) {
-            return zodiacName = "Sagittarius";
-        } else if (month == 12 && day >= 22 || month == 1 && day <= 19) {
-            return zodiacName = "Capricorn";
-        } else if (month == 1 && day >= 20 || month == 2 && day <= 18) {
-            return zodiacName = "Aquarius";
-        } else {
-            return zodiacName = "Pisces";
-        }
-    } else {
-        alert("Invalid Date of Birth, Please try again.");
-    }
-}
-
 function showResult(){
     const inputDay = document.getElementById("day-input").value;
     const inputMonth = document.getElementById("month-input").value;
-    let zodiacSign = getZodiacSigns(parseInt(inputDay), parseInt(inputMonth));
-    const dayDropdown = document.querySelector("#dayDropdown").value;
-    if(dayDropdown === "selectTab"){
-        return alert("Select Horoscope day")
-    }
+    const searchZodiacSign = new Zodiac();
+    searchZodiacSign.setDate(inputDay, inputMonth);
+    const zodiacSign = searchZodiacSign.getZodiacSigns();
+    selectedDay = document.querySelector("#dayDropdown").value;
     const location = document.querySelector("#location").value;
-    if(location === ""){
-        return alert("Current Location cannot be empty");
-    }
-    selectedDay = dayDropdown;
-
-    fetchAztroHoro(zodiacSign, dayDropdown);
+   
+    dayDetector(selectedDay, location)
+    fetchAztroHoro(zodiacSign, selectedDay);
     fetchDevbrewerShort(zodiacSign);
     fetchDevbrewerLong(zodiacSign);
     fetchCurrentWeather(location);
 }
 
+function dayDetector(selectedDay, location){
+    if(selectedDay === "selectTab"){
+        return alert("Select Horoscope day")
+    }
+    if(location === ""){
+        return alert("Current Location cannot be empty");
+    }
+}
+
+
+//Main Horoscope result
 function fetchAztroHoro(zodiacSign, dayDropdown){
     fetch(`${baseAztroURL}/?sign=${zodiacSign}&day=${dayDropdown}`, {
         "method": "POST",
@@ -90,23 +64,19 @@ function fetchAztroHoro(zodiacSign, dayDropdown){
 }
 
 function renderHoroScope(horoObj, zodiacSign){
-    const topZodiacImg = document.querySelector("#resultZodiacImg"),
-        zodiac = document.querySelector("#yourZodiac"),
-        compatibility = document.querySelector("#compatibility"),
-        color = document.querySelector("#lucky_color"),
-        number = document.querySelector("#lucky_number"),
-        time = document.querySelector("#lucky_time"),
-        mood = document.querySelector("#mood"),
-        descList = document.querySelector("#descList"),
-        desc = document.createElement("li");
+    const desc = document.createElement("li");
 
-    topZodiacImg.src = mainZodiacSign(zodiacSign);
-    zodiac.innerText = zodiacSign;
-    compatibility.innerText = horoObj.compatibility;
-    color.innerText = horoObj.color;
-    number.innerText = horoObj.lucky_number;
-    time.innerText = horoObj.lucky_time;
-    mood.innerText = horoObj.mood;
+    const mainZodiacImg = new Zodiac();
+    mainZodiacImg.setMainImg(zodiacSign);
+    const mainZodiacURL = mainZodiacImg.getMainImg();
+
+    document.querySelector("#resultZodiacImg").src = mainZodiacURL;
+    document.querySelector("#yourZodiac").innerText = zodiacSign;
+    document.querySelector("#compatibility").innerText = horoObj.compatibility;
+    document.querySelector("#lucky_color").innerText = horoObj.color;
+    document.querySelector("#lucky_number").innerText = horoObj.lucky_number;
+    document.querySelector("#lucky_time").innerText = horoObj.lucky_time;
+    document.querySelector("#mood").innerText = horoObj.mood;
     desc.innerText = horoObj.description;
     descList.appendChild(desc);
     luckyTime = horoObj.lucky_time;
@@ -114,37 +84,7 @@ function renderHoroScope(horoObj, zodiacSign){
     fetchJokes(horoObj.lucky_number);
 }
 
-function mainZodiacSign(zodiacSign){
-    let imgRef;
-    switch (zodiacSign) {
-        case "Aries": imgRef =  "./img/mainZodiacs/aries.png"
-            break;
-        case "Taurus": imgRef =  "./img/mainZodiacs/taurus.png"
-            break;
-        case "Gemini": imgRef =  "./img/mainZodiacs/gemini.png"
-            break;
-        case "Cancer": imgRef =  "./img/mainZodiacs/cancer.png"
-            break;
-        case "Leo": imgRef =  "./img/mainZodiacs/leo.png"
-            break;
-        case "Virgo": imgRef =  "./img/mainZodiacs/virgo.png"
-            break;
-        case "Libra": imgRef =  "./img/mainZodiacs/libra.png"
-            break;
-        case "Scorpio": imgRef =  "./img/mainZodiacs/scorpio.png"
-            break;
-        case "Sagittarius": imgRef =  "./img/mainZodiacs/sagittarius.png"
-            break;
-        case "Capricorn": imgRef =  "./img/mainZodiacs/capricorn.png"
-            break;
-        case "Aquarius": imgRef =  "./img/mainZodiacs/aquarius.png"
-            break;
-        case "Pisces": imgRef =  "./img/mainZodiacs/pisces.png"
-            break;
-        }
-    return imgRef;
-}
-
+//Match Horoscope results
 function fetchDevbrewerShort(zodiacSign){
     fetch(`${baseDevbrewerShortURL}/${zodiacSign}`, {
 	"method": "GET",
@@ -161,62 +101,26 @@ function fetchDevbrewerShort(zodiacSign){
 function renderShort(horoObj, zodiacSign){
     const desc = document.createElement("li");
     desc.innerText = horoObj[`${zodiacSign}`].Today;
-    list.appendChild(desc);
-    
-    const title = document.querySelector("#matchTitle"),
-        love = document.querySelector("#love"),
-        friend = document.querySelector("#friendship"),
-        career = document.querySelector("#career"),
-        loveImg = document.querySelector("#loveImg"),
-        friendImg = document.querySelector("#friendImg"),
-        careerImg = document.querySelector("#careerImg"),
-        loveZodiac = document.querySelector("#loveZodiac"),
-        friendZodiac = document.querySelector("#friendZodiac"),
-        careerZodiac = document.querySelector("#careerZodiac");
+    descList.appendChild(desc);
+    const loveDesc = horoObj["Matchs"].Love,
+        friendDesc = horoObj["Matchs"].Friendship,
+        careerDesc = horoObj["Matchs"].Career;
 
-    title.innerText = "Matches";
-    love.innerText = "LOVE";
-    friend.innerText = "FRIENDSHIP";
-    career.innerText = "CAREER";
-    loveImg.src = zodiacImgs(horoObj["Matchs"].Love);
-    friendImg.src = zodiacImgs(horoObj["Matchs"].Friendship);
-    careerImg.src = zodiacImgs(horoObj["Matchs"].Career);
-    loveZodiac.innerText = horoObj["Matchs"].Love;
-    friendZodiac.innerText = horoObj["Matchs"].Friendship;
-    careerZodiac.innerText = horoObj["Matchs"].Career;
+    const matchZodiacImg = new Zodiac();
+
+    document.querySelector("#matchTitle").innerText = "Matches";
+    document.querySelector("#love").innerText = "LOVE";
+    document.querySelector("#friendship").innerText = "FRIENDSHIP";
+    document.querySelector("#career").innerText = "CAREER";
+    document.querySelector("#loveImg").src = matchZodiacImg.getMatchImg(loveDesc);
+    document.querySelector("#friendImg").src = matchZodiacImg.getMatchImg(friendDesc);
+    document.querySelector("#careerImg").src = matchZodiacImg.getMatchImg(careerDesc);
+    document.querySelector("#loveZodiac").innerText = loveDesc;
+    document.querySelector("#friendZodiac").innerText = friendDesc;
+    document.querySelector("#careerZodiac").innerText = careerDesc;
 }
 
-function zodiacImgs(matchZodiac){
-    let imgRef;
-    switch (matchZodiac) {
-        case "Aries": imgRef =  "./img/zodiacImgs/Aries.png"
-            break;
-        case "Taurus": imgRef =  "./img/zodiacImgs/Taurus.png"
-            break;
-        case "Gemini": imgRef =  "./img/zodiacImgs/Gemini.png"
-            break;
-        case "Cancer": imgRef =  "./img/zodiacImgs/Cancer.png"
-            break;
-        case "Leo": imgRef =  "./img/zodiacImgs/Leo.png"
-            break;
-        case "Virgo": imgRef =  "./img/zodiacImgs/Virgo.png"
-            break;
-        case "Libra": imgRef =  "./img/zodiacImgs/Libra.png"
-            break;
-        case "Scorpio": imgRef =  "./img/zodiacImgs/Scorpio.png"
-            break;
-        case "Sagittarius": imgRef =  "./img/zodiacImgs/Saggitarius.png"
-            break;
-        case "Capricorn": imgRef =  "./img/zodiacImgs/Capricorn.png"
-            break;
-        case "Aquarius": imgRef =  "./img/zodiacImgs/Aquarius.png"
-            break;
-        case "Pisces": imgRef =  "./img/zodiacImgs/Pisces.png"
-            break;
-    }
-    return imgRef;
-}
-
+//Long Horoscope Descriptions by categories
 function fetchDevbrewerLong(zodiacSign){
     fetch(`${baseDevbrewerLongURL}/${zodiacSign}`, {
 	"method": "GET",
@@ -231,50 +135,20 @@ function fetchDevbrewerLong(zodiacSign){
 }
 
 function renderLong(horoObj, zodiacSign){
-    const daily = document.querySelector("#dailyDesc"),
-        health = document.querySelector("#healthDesc"),
-        career = document.querySelector("#careerDesc"),
-        love = document.querySelector("#loveDesc");
- 
-    daily.innerText = horoObj[`${zodiacSign}`].Daily;
-    health.innerText = horoObj[`${zodiacSign}`].Health;
-    career.innerText = horoObj[`${zodiacSign}`].Career;
-    love.innerText = horoObj[`${zodiacSign}`].Love;
+    document.querySelector("#dailyDesc").innerText = horoObj[`${zodiacSign}`].Daily;
+    document.querySelector("#healthDesc").innerText = horoObj[`${zodiacSign}`].Health;
+    document.querySelector("#careerDesc").innerText = horoObj[`${zodiacSign}`].Career;
+    document.querySelector("#loveDesc").innerText = horoObj[`${zodiacSign}`].Love;
 }
 
-function checkResult(){
-    const yourName = document.querySelector("#yourName").value;
-    const partnerName = document.querySelector("#partnerName").value;
-    fetchLoveCalculator(yourName, partnerName);
-}
-
-function fetchLoveCalculator(yourName, partnerName){
-    fetch(`${baseLoveCalculatorURL}?fname=${yourName}&sname=${partnerName}`, {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
-            "x-rapidapi-host": "love-calculator.p.rapidapi.com"
-        }
-    })
-    .then(resp => resp.json())
-    .then(result => renderLoveResult(result))
-    .catch(err => console.error(err));
-}
-
-function renderLoveResult(result){
-    const calculateResult = document.querySelector("#calculateResult"),
-        heartImg = document.querySelector("#heartImg"),
-        comment = document.querySelector("#comment");
-    calculateResult.innerText = `${result.percentage}%`;
-    comment.innerText = `Comment: ${result.result}`;
-    if(parseInt(result.percentage) >= 50){
-        heartImg.src = "./img/hearts/heart.png";
-    } else {
-        heartImg.src = "./img/hearts/breakHeart.png";
-    }
-}
-
-// OpenWeatherMap(weather) to get latitude & longitude for onecall
+/*
+    Render weather detail based on lucky time and location
+    step1: Get location data (get latitude & longitude by input location)
+    step2: Get hourly weather data in the location (in next 3 days data)
+    step3: prepare parameters value to find exact weather time object
+    preparation: timestamp converter + getLuckyTime to get lucky time
+    step4: Find the lucky time weather if selected day is past weather then use a historical weather data.
+*/
 function fetchCurrentWeather(location){
     fetch(`${baseOpenWeatherURL}/weather?q=${location}&appid=974057dc1632b35f6f14e11fe1ca1394`)
     .then(resp => resp.json())
@@ -288,7 +162,6 @@ function getLatLonData(latlonObj){
     fetchOneCall(latitude, longitude);
 }
 
-// Get hourly/daily weather based on the lucky-time
 function fetchOneCall(latitude, longitude){
     fetch(`${baseOpenWeatherURL}/onecall?lat=${latitude}&lon=${longitude}&exclude=current,minutely&appid=974057dc1632b35f6f14e11fe1ca1394`)
     .then(resp => resp.json())
@@ -296,6 +169,7 @@ function fetchOneCall(latitude, longitude){
     .catch(err => console.log(err));
 }
 
+//Wait untill lucky time has value returned
 function luckyTimeInterval(){
     return new Promise(resolve => {
         let setIntervalId = setInterval(findLuckyTimeValue, 500);
@@ -377,13 +251,7 @@ function convertToTimestamp(luckyTime, selectedDay){
 }
 
 function getHourlyWeather(resultObj, latitude, longitude){
-    const title = document.querySelector("#weatherTitle"),
-        location = document.querySelector("#weatherLocation"),
-        luckyTime = document.querySelector("#luckyTime"),
-        temperature = document.querySelector("#temperature"),
-        description = document.querySelector("#description"),
-        feelslike = document.querySelector("#feelslike");
-    title.innerText = "Lucky Time Weather";
+    document.querySelector("#weatherTitle").innerText = "Lucky Time Weather";
 
     const hourlyData = async ()=> {
         const timeStamp = await getLuckyTime().then(result => convertToTimestamp(result, selectedDay))
@@ -391,47 +259,37 @@ function getHourlyWeather(resultObj, latitude, longitude){
             for (let i = 0; i < resultObj["hourly"].length; i++) {
                 const dt = resultObj["hourly"][i]["dt"];
                 if(parseInt(timeStamp) === dt){
-                    const locationStr = resultObj["timezone"];
-                    location.innerText = locationStr.split("/")[1];
-                    let unixDate = new Date(timeStamp * 1000);
-                    luckyTime.innerText = `${unixDate.getHours()}:00`;
-                    function kelToCel(kelvin){
-                        return Math.round((kelvin - 272.15) * 10) / 10;
-                    }
-                    temperature.innerText = `${kelToCel(resultObj["hourly"][i]["temp"])}°`;
-                    description.innerText = resultObj["hourly"][i]["weather"][0]["main"];
-                    feelslike.innerText = `Feels like ${kelToCel(resultObj["hourly"][i]["feels_like"])}°`;
+                    renderHourlyWeather(resultObj, timeStamp, resultObj["hourly"][i]);
                 }
             }
         } else {
             fetch(`${baseOpenWeatherURL}/onecall/timemachine?lat=${latitude}&lon=${longitude}&dt=${timeStamp}&appid=974057dc1632b35f6f14e11fe1ca1394`)
             .then(resp => resp.json())
             .then(hourlyObj => {
-                const locationStr = hourlyObj["timezone"];
-                location.innerText = locationStr.split("/")[1];
-                let unixDate = new Date(hourlyObj["current"]["dt"] * 1000);
-                luckyTime.innerText = `${unixDate.getHours()}:00`;
-                function kelToCel(kelvin){
-                    return Math.round((kelvin - 272.15) * 10) / 10;
-                }
-                temperature.innerText = `${kelToCel(hourlyObj["current"]["temp"])}°`;
-                description.innerText = hourlyObj["current"]["weather"][0]["main"];
-                feelslike.innerText = `Feels like ${kelToCel(hourlyObj["current"]["feels_like"])}°`;
+                renderHourlyWeather(hourlyObj, hourlyObj["current"]["dt"], hourlyObj["current"])
             })
             .catch(err => console.log(err));
         }
     }
+
+    function renderHourlyWeather(obj, timestamp, weatherObj){
+        document.querySelector("#weatherLocation").innerText = obj["timezone"].split("/")[1];
+        let unixDate = new Date(timestamp * 1000);
+        document.querySelector("#luckyTime").innerText = `${unixDate.getHours()}:00`;
+        function kelToCel(kelvin){
+            return Math.round((kelvin - 272.15) * 10) / 10;
+        }
+        document.querySelector("#temperature").innerText = `${kelToCel(weatherObj["temp"])}°`;
+        document.querySelector("#description").innerText = weatherObj["weather"][0]["main"];
+        feelslike.innerText = `Feels like ${kelToCel(weatherObj["feels_like"])}°`;
+    }
+
     hourlyData();
 }
 
+// Quote sort by lucky number
 function fetchQuotes(luckyNumber){
-    let page = 1;
-    if(luckyNumber < 10){
-        page = 1;
-    } else {
-        page = String(luckyNumber).slice(1);
-    }
-    fetch(`${baseQuotesURL}?page=${page}`, {
+    fetch(`${baseQuotesURL}?page=${luckyNumber}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
@@ -444,12 +302,19 @@ function fetchQuotes(luckyNumber){
 }
 
 function renderQuotes(quoteObj, luckyNumber){
-    const title = document.querySelector("#quoteTitle"),
-        quote = document.querySelector("#quote");
-    title.innerText = "Lucky Number Quotes";
-    quote.innerText = `"${quoteObj["quotes"][(String(luckyNumber).slice(-1))]["quote"]}"`;
+    document.querySelector("#quoteTitle").innerText = "Lucky Number Quotes";
+    document.querySelector("#quote").innerText = `"${quoteObj["quotes"][Math.floor(Math.random() * quoteObj.quotes.length)]["quote"]}"`;
+
+    const quoteBtn = document.createElement("button");
+    quoteBtn.innerText = "Get other quote"
+    document.querySelector("#quoteContainer").appendChild(quoteBtn);
+    quoteBtn.addEventListener("click", function() {
+        fetchQuotes(luckyNumber);
+        this.remove();
+    })
 }
 
+//Joke sort by lucky number
 function fetchJokes(luckyNumber){
     fetch(`${baseJokesURL}/Any?idRange=${luckyNumber}&blacklistFlags=nsfw%2Cracist`, {
         "method": "GET",
@@ -464,10 +329,9 @@ function fetchJokes(luckyNumber){
 }
 
 function renderJokes(jokeObj){
-    const title = document.querySelector("#jokeTitle"),
-        setup = document.querySelector("#setup"),
+    const setup = document.querySelector("#setup"),
         delivery = document.querySelector("#delivery");
-    title.innerText = "Lucky Number Jokes";
+    document.querySelector("#jokeTitle").innerText = "Lucky Number Jokes";
     if(jokeObj["error"] === true){
         setup.innerText = "This is a censored jokes";
         delivery.innerText = "No joke today."
@@ -477,6 +341,39 @@ function renderJokes(jokeObj){
     }
 }
 
+//Love Calculator
+function checkResult(){
+    const yourName = document.querySelector("#yourName").value;
+    const partnerName = document.querySelector("#partnerName").value;
+    fetchLoveCalculator(yourName, partnerName);
+}
+
+function fetchLoveCalculator(yourName, partnerName){
+    fetch(`${baseLoveCalculatorURL}?fname=${yourName}&sname=${partnerName}`, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-key": "b7a882fa24msh824e4db22062f83p1d21a1jsn6da2b4c75e08",
+            "x-rapidapi-host": "love-calculator.p.rapidapi.com"
+        }
+    })
+    .then(resp => resp.json())
+    .then(result => renderLoveResult(result))
+    .catch(err => console.error(err));
+}
+
+function renderLoveResult(result){
+    const heartImg = document.querySelector("#heartImg");
+        
+    document.querySelector("#calculateResult").innerText = `${result.percentage}%`;
+    document.querySelector("#comment").innerText = `Comment: ${result.result}`;
+    if(parseInt(result.percentage) >= 50){
+        heartImg.src = "./img/hearts/heart.png";
+    } else {
+        heartImg.src = "./img/hearts/breakHeart.png";
+    }
+}
+
+// All result contents invisible till user submits
 function visibilityOn(){
     let visible = document.querySelector("#visibility");
     visible.style.visibility = "visible";
