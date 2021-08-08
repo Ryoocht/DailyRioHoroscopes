@@ -14,6 +14,7 @@ let luckyTime;
 
 searchForm.addEventListener("submit", e => {
     e.preventDefault();
+    descList.innerHTML = "";
     showResult();
     visibilityOn();
 });
@@ -47,7 +48,6 @@ function dayDetector(selectedDay, location){
         return alert("Current Location cannot be empty");
     }
 }
-
 
 //Main Horoscope result
 function fetchAztroHoro(zodiacSign, dayDropdown){
