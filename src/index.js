@@ -372,9 +372,3 @@ function renderLoveResult(result){
         heartImg.src = "./img/hearts/breakHeart.png";
     }
 }
-
-// All result contents invisible till user submits
-function visibilityOn(){
-    let visible = document.querySelector("#visibility");
-    visible.style.visibility = "visible";
-}
