@@ -1,13 +1,104 @@
 /* love match div */
-.subtitleContainers{
-    display: inline-block;
-    vertical-align: top;
-    width: 33%;
+.cardContainer {
+    position: relative;
+    width: 49%;
+    height: 400px;
+    min-width: 300px;
     min-height: 400px;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-    background: #FFEBEE;
+    margin: 4px;
+    perspective: 1000px; 
+    float: left;
+}
+
+.active {
+    transform: translateZ(0px) rotateY(180deg) !important; 
+}
+
+.active:after {
+     display: none; 
+}
+
+.card {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform: translateZ(-100px);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
+}
+
+.card:after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    box-shadow: 0 14px 50px -4px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1.4); 
+}
+
+.card:hover {
+    transform: translateZ(0px); 
+}
+
+.card:hover:after {
+    opacity: 1; 
+}
+
+.card .side {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background-color: white; 
+}
+
+ .card .front {
+    z-index: 2; 
+}
+
+ .card .back {
+   transform: rotateY(180deg); 
+}
+
+.card .info {
+    position: relative;
+   padding: 16px;
+   height: 100%;
+   text-align: center;
+}
+
+.front {
+    background: -moz-radial-gradient(#FFF, #FFC778 40%, #F13F79);
+    background: -webkit-radial-gradient(#FFF, #FFC778 40%, #F13F79);
+    background: radial-gradient(#FFF, #FFC778 40%, #F13F79); 
+    background-position: center;
+    background-size: cover;
+    border-radius: 5px 5px 0 0;
+    width: 100%;
+    height: 250px; 
+}
+
+.cardTitle {
+    font-size: 3.5rem;
+    font-family: Garamond;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.cardSubTitle {
+    font-size: 1.5rem;
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .title {
@@ -85,20 +176,7 @@
 }
 
 /* Love Calculator div */
-#loveCalculator {
-    width: 100%;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    margin-top: 20px;
-    padding-bottom: 50px;
-    padding-top: 20px;
-    background: #E0E0E0;
-}
-
 #calculateResult {
-    display: flex;
-    clear: both;
     justify-content: center;
     font-size: 40px;
 }

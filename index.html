@@ -97,59 +97,107 @@
                 <p id="loveDesc" class="pStyle"></p>
         </div>
 
-        <div class="subtitleContainers">
-            <h2 class="title" id="matchTitle"></h2>
-            <div class="matchContainers">
-                <h3 id="love" class="matchTitle"></h3>
-                <img class="img" id="loveImg">
-                <p class="zodiac" id="loveZodiac"></p>
-            </div>
-            <div class="matchContainers">
-                <h3 id="friendship" class="matchTitle"></h3>
-                <img class="img" id="friendImg">
-                <p class="zodiac" id="friendZodiac"></p>
-            </div>
-            <div class="matchContainers">
-                <h3 id="career" class="matchTitle"></h3>
-                <img class="img" id="careerImg">
-                <p class="zodiac" id="careerZodiac"></p>
-            </div>
-        </div>
-        <div class="subtitleContainers">
-            <h2 class="title" id="weatherTitle"></h2>
-            <div id="weatherContainer">
-                <div id="cityandTime">
-                    <p id="weatherLocation"></p>
-                    <p id="luckyTime"></p>
+        <div class="cardContainer inactive">
+            <div class="card">
+                <div class="side front">
+                    <div class="info">
+                        <h2 class="cardTitle">Zodiac Match</h2>
+                        <h3 class="cardSubTitle">LEARN MORE</h3>
+                    </div>
                 </div>
-                <div id="tempandDesc">
-                    <p id="temperature"></p>
-                    <p id="description"></p>
+                <div class="side back">
+                    <div class="info">
+                        <h2 class="title" id="matchTitle"></h2>
+                        <div class="matchContainers">
+                            <h3 id="love" class="matchTitle"></h3>
+                            <img class="img" id="loveImg">
+                            <p class="zodiac" id="loveZodiac"></p>
+                        </div>
+                        <div class="matchContainers">
+                            <h3 id="friendship" class="matchTitle"></h3>
+                            <img class="img" id="friendImg">
+                            <p class="zodiac" id="friendZodiac"></p>
+                        </div>
+                        <div class="matchContainers">
+                            <h3 id="career" class="matchTitle"></h3>
+                            <img class="img" id="careerImg">
+                            <p class="zodiac" id="careerZodiac"></p>
+                        </div>
+                    </div>
                 </div>
-                <p id="feelslike"></p>
             </div>
         </div>
-        <div class="subtitleContainers">
-            <h2 class="title" id="quoteTitle"></h2>
-            <div id="quoteContainer" class="luckyNumberContainer">
-                <p id="quote"></p>
-            </div>
-            <h2 class="title" id="jokeTitle"></h2>
-            <div id="jokeContainer" class="luckyNumberContainer">
-                <p id="setup"></p>
-                <p id="delivery"></p>
+        <div class="cardContainer inactive">
+            <div class="card">
+                <div class="side front">
+                    <div class="info">
+                        <h2 class="cardTitle">Lucky Number Weather</h2>
+                        <h3 class="cardSubTitle">LEARN MORE</h3>
+                    </div>
+                </div>
+                <div class="side back">
+                    <div class="info">
+                        <h2 class="title" id="weatherTitle"></h2>
+                        <div id="weatherContainer">
+                            <div id="cityandTime">
+                                <p id="weatherLocation"></p>
+                                <p id="luckyTime"></p>
+                            </div>
+                            <div id="tempandDesc">
+                                <p id="temperature"></p>
+                                <p id="description"></p>
+                            </div>
+                            <p id="feelslike"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="loveCalculator">
-            <h2 class="title">Love Calculator</h2>
-            <form id="calculateForm">
-                <label for="result" id="calculateResult"></label>
-                <input type="text" name="yourName" id="yourName" class="inputLayout" placeholder="Your First Name">
-                <img id="heartImg">
-                <input type="text" name="partnerName" id="partnerName" class="inputLayout" placeholder="Partner's First Name">
-                <p id="comment"></p>
-                <button id="checkBtn">Check</button>
-            </form>
+        <div class="cardContainer inactive">
+            <div class="card">
+                <div class="side front">
+                    <div class="info">
+                        <h2 class="cardTitle">Lucky Number Quote & Jokes</h2>
+                        <h3 class="cardSubTitle">LEARN MORE</h3>
+                    </div>
+                </div>
+                <div class="side back">
+                    <div class="info">
+                        <h2 class="title" id="quoteTitle"></h2>
+                        <div id="quoteContainer" class="luckyNumberContainer">
+                            <p id="quote"></p>
+                        </div>
+                        <h2 class="title" id="jokeTitle"></h2>
+                        <div id="jokeContainer" class="luckyNumberContainer">
+                            <p id="setup"></p>
+                            <p id="delivery"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cardContainer inactive">
+            <div class="card">
+                <div class="side front">
+                    <div class="info">
+                        <h2 class="cardTitle">Love Calculator</h2>
+                        <h3 class="cardSubTitle">LEARN MORE</h3>
+                    </div>
+                </div>
+                <div class="side back">
+                    <div class="info">
+                        <h2 class="title">Love Calculator</h2>
+                        <form id="calculateForm">
+                            <label for="result" id="calculateResult"></label>
+                            <input type="text" name="yourName" id="yourName" class="inputLayout" placeholder="Your First Name">
+                            <img id="heartImg">
+                            <input type="text" name="partnerName" id="partnerName" class="inputLayout" placeholder="Partner's First Name">
+                            <p id="comment"></p>
+                            <button id="checkBtn">Check</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
