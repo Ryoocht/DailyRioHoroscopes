@@ -86,15 +86,15 @@
                 </div>
             </div>
         </div>
-        <div class="learnMorediv">
-            <label for="dailyDesc" class="titlelabel">Daily</label>
-                <p id="dailyDesc" class="pStyle"></p>
-            <label for="dailyDesc" class="titlelabel">Health</label>
-                <p id="healthDesc" class="pStyle"></p>
-            <label for="dailyDesc" class="titlelabel">Career</label>
-                <p id="careerDesc" class="pStyle"></p>
-            <label for="dailyDesc" class="titlelabel">Love</label>
-                <p id="loveDesc" class="pStyle"></p>
+        <div class="categorisedDescDiv">
+            <button class="accordion">Daily</button>
+                <div class="panel"><p id="dailyDesc" class="descStyle"></p></div>
+            <button class="accordion">Health</button>
+                <div class="panel"><p id="healthDesc" class="descStyle"></p></div>
+            <button class="accordion">Career</button>
+                <div class="panel"><p id="careerDesc" class="descStyle"></p></div>
+            <button class="accordion">Love</button>
+                <div class="panel"><p id="loveDesc" class="descStyle"></p></div>
         </div>
 
         <div class="cardContainer inactive">
@@ -138,16 +138,16 @@
                 <div class="side back">
                     <div class="info">
                         <h2 class="title" id="weatherTitle"></h2>
+                        <p id="luckyTime"></p>
                         <div id="weatherContainer">
-                            <div id="cityandTime">
+                            <div id="rightside">
                                 <p id="weatherLocation"></p>
-                                <p id="luckyTime"></p>
-                            </div>
-                            <div id="tempandDesc">
-                                <p id="temperature"></p>
                                 <p id="description"></p>
                             </div>
-                            <p id="feelslike"></p>
+                            <div id="leftside">
+                                <p id="temperature"></p>
+                                <p id="feelslike"></p>
+                            </div>
                         </div>
                     </div>
                 </div>

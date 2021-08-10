@@ -251,7 +251,7 @@ function convertToTimestamp(luckyTime, selectedDay){
 }
 
 function getHourlyWeather(resultObj, latitude, longitude){
-    document.querySelector("#weatherTitle").innerText = "Lucky Time Weather";
+    document.querySelector("#weatherTitle").innerText = "Lucky Time";
 
     const hourlyData = async ()=> {
         const timeStamp = await getLuckyTime().then(result => convertToTimestamp(result, selectedDay))

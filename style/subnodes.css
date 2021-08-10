@@ -134,36 +134,46 @@
     color: #FF5722;
 }
 
-#weatherContainer {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#weatherLocation, #luckyTime {
-    font-size: 2.4em;
-    color: #FF5722;
+/* Weather node */
+#luckyTime {
+    font-size: 2.4rem;
+    padding: 10px;
+    color: rgb(238, 57, 184);
     font-weight: bold;
+    border-bottom: 1px solid black;
 }
 
-#tempandDesc {
+#weatherContainer {
     position: relative;
-    margin: 30px;
 }
 
-#temperature {
-    display: inline-block;
-    font-size: 4em;
-    margin-right: 20px;
+#rightside {
+    float: right;
+    width: 50%;
+}
+
+#leftside {
+    float: left;
+    border-right: 1px solid black;
+    width: 50%;
+}
+
+#weatherLocation {
+    font-size: 2.4rem;
+    margin: 50px 0 30px 0;
 }
 
 #description {
-    display: inline-block;
-    font-size: 4em;
-    margin-left: 20px;
+    font-size: 2.4rem;
+}
+
+#temperature {
+    font-size: 5rem;
+    margin: 30px 0 30px 0;
 }
 
 #feelslike {
-    font-size: 2em;
+    font-size: 2rem;
 }
 
 .luckyNumberContainer{
